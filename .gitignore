@@ -8,6 +8,9 @@
 
 # Ignore media files (videos, images)
 *.mp4
+*.MTS
+*.mts
+*.ts
 *.avi
 *.mov
 *.jpg
