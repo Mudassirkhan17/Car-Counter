@@ -12,7 +12,7 @@ TARGET_WIDTH = 640
 TARGET_HEIGHT = 480
  
 # Load video
-cap = cv2.VideoCapture("location1.MTS")  # For Video
+cap = cv2.VideoCapture("00008.MTS")  # For Video
 
 # Use a smaller model for better performance
 model = YOLO("yolov8s.pt")  # Using smaller model (s instead of l)
@@ -142,9 +142,9 @@ while True:
             detections = np.empty((0, 5))
             detection_classes = {}
         
-            for r in results:
-                boxes = r.boxes
-                for box in boxes:
+    for r in results:
+        boxes = r.boxes
+        for box in boxes:
                     # Get class and filter after detection
                     cls = int(box.cls[0])
                     if cls not in target_class_indices:
@@ -273,7 +273,7 @@ while True:
         cv2.imshow("Image", img)
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
-            break
+        break
         elif key == ord('l'):  # Press 'l' to set a new line
             print("Line setting mode activated. Click to set the counting line.")
             is_setting_line = True
