@@ -1,0 +1,42 @@
+# Ignore Python files
+*.py
+
+# Ignore YOLO weight files (they are large binary files)
+*.pt
+*.weights
+*.onnx
+
+# Ignore media files (videos, images)
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Ignore cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Don't ignore any other files
+# You can add other patterns here if needed
+# Examples:
+# __pycache__/
+# *.pyc
+# .env 
