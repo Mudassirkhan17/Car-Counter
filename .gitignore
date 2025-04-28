@@ -1,5 +1,5 @@
 # Ignore Python files
-*.py
+# *.py
 
 # Ignore YOLO weight files (they are large binary files)
 *.pt
