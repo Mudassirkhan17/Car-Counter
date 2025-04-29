@@ -6,7 +6,7 @@ import math
 from sort import *
 import time
  
-cap = cv2.VideoCapture("location2_night.MTS")  # For Video
+cap = cv2.VideoCapture("location2.MTS")  # For Video
  
 model = YOLO("yolov8n.pt")
 # Set model to CPU mode explicitly
@@ -40,11 +40,7 @@ if imgGraphics is None:
 tracker = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
  
 # Define three counting lines
-# To increase length: decrease first x-coordinate and increase second x-coordinate
-# Original: limitsUp = [614-560, 396, 1038-560, 387]
-# Find center: (614-560 + 1038-560)/2 = 266
-# Add 100px to each side
-limitsUp = [166, 396, 366, 387]    # Upper boundary - extended by 100px on each side
+limitsUp = [100+14, 396-6, 980+14, 387-6]    # Upper boundary - extended on x-axis
 limitsDown = [55+16, 456-15, 1000, 447-15]   # Lower boundary - parallel to Up line, 100px lower
 limitsLeft = [0, 0, 0, 0]   # Left boundary - fixed to be a vertical line
 
