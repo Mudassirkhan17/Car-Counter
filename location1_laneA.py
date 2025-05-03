@@ -244,10 +244,6 @@ while True:
         
         # Draw (lighter and faster)
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 1)  # thinner box
-        label = f'{vehicle_type} {int(id)}'
-        t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]  # smaller font, thinner
-        cv2.rectangle(img, (x1, y1 - t_size[1] - 6), (x1 + t_size[0], y1), color, -1)
-        cv2.putText(img, label, (x1, y1 - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.circle(img, (cx, cy), 3, color, cv2.FILLED)  # smaller circle
         
         vehicle_positions[int(id)] = (cx, cy)
@@ -300,20 +296,6 @@ while True:
     totalCountUp = len(carCountUp) + len(truckCountUp) + len(busCountUp) + len(motorbikeCountUp)
     totalCountDown = len(carCountDown) + len(truckCountDown) + len(busCountDown) + len(motorbikeCountDown)
     
-    # Display counts using pre-calculated positions (lighter text)
-    cv2.putText(img, f'Up: {totalCountUp}', text_positions['up'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, (50, 50, 255), 1)
-    cv2.putText(img, f'Down: {totalCountDown}', text_positions['down'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, (50, 50, 255), 1)
-    
-    cv2.putText(img, f'Cars Up: {len(carCountUp)}', text_positions['cars_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-    cv2.putText(img, f'Trucks Up: {len(truckCountUp)}', text_positions['trucks_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-    cv2.putText(img, f'Buses Up: {len(busCountUp)}', text_positions['buses_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-    cv2.putText(img, f'Bikes Up: {len(motorbikeCountUp)}', text_positions['bikes_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
-    
-    cv2.putText(img, f'Cars Down: {len(carCountDown)}', text_positions['cars_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-    cv2.putText(img, f'Trucks Down: {len(truckCountDown)}', text_positions['trucks_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-    cv2.putText(img, f'Buses Down: {len(busCountDown)}', text_positions['buses_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-    cv2.putText(img, f'Bikes Down: {len(motorbikeCountDown)}', text_positions['bikes_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
-    
     # Calculate FPS
     fps_frame_count += 1
     if fps_frame_count >= 10:
@@ -322,9 +304,7 @@ while True:
         fps_start_time = time.time()
         fps_frame_count = 0
     
-    cv2.putText(img, f'FPS: {fps:.1f}', (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 1)
     frame_time = time.time() - frame_start_time
-    cv2.putText(img, f'Frame time: {frame_time*1000:.0f}ms', (20, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
  
     # Check if current segment has ended (video time)
     if video_time >= last_segment_start_time + segment_duration_sec:
@@ -377,6 +357,20 @@ while True:
         seg_carCountDown.clear(); seg_truckCountDown.clear(); seg_busCountDown.clear(); seg_motorbikeCountDown.clear()
         last_segment_start_time += segment_duration_sec
         segment_number += 1
+
+    # Display counts and performance metrics on the frame
+    cv2.putText(img, f'Up: {totalCountUp}', text_positions['up'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, (50, 50, 255), 1)
+    cv2.putText(img, f'Down: {totalCountDown}', text_positions['down'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, (50, 50, 255), 1)
+    cv2.putText(img, f'Cars Up: {len(carCountUp)}', text_positions['cars_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+    cv2.putText(img, f'Trucks Up: {len(truckCountUp)}', text_positions['trucks_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+    cv2.putText(img, f'Buses Up: {len(busCountUp)}', text_positions['buses_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    cv2.putText(img, f'Bikes Up: {len(motorbikeCountUp)}', text_positions['bikes_up'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+    cv2.putText(img, f'Cars Down: {len(carCountDown)}', text_positions['cars_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+    cv2.putText(img, f'Trucks Down: {len(truckCountDown)}', text_positions['trucks_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+    cv2.putText(img, f'Buses Down: {len(busCountDown)}', text_positions['buses_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    cv2.putText(img, f'Bikes Down: {len(motorbikeCountDown)}', text_positions['bikes_down'], cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+    cv2.putText(img, f'FPS: {fps:.1f}', (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 1)
+    cv2.putText(img, f'Frame time: {frame_time*1000:.0f}ms', (20, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
     # Show resized window for faster display
     disp_img = cv2.resize(img, (disp_width, disp_height))
