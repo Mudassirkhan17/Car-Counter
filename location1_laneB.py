@@ -39,19 +39,20 @@ MIN_TRUCK_HEIGHT = 170
 MIN_BUS_HEIGHT = 190
 
 # Minimum detection size (objects smaller than this will be ignored)
-MIN_DETECTION_SIZE = 50  # pixels - objects smaller than 15x15 are too small to classify reliably
+MIN_DETECTION_SIZE = 48  # pixels - objects smaller than 15x15 are too small to classify reliably
 
 # Confidence thresholds for each vehicle class
 CAR_CONFIDENCE_THRESHOLD = 0.48
 TRUCK_CONFIDENCE_THRESHOLD = 0.85
 BUS_CONFIDENCE_THRESHOLD = 0.85
 MOTORBIKE_CONFIDENCE_THRESHOLD = 0.48  # Highest threshold to prevent car misclassification
-HIGH_CONFIDENCE_THRESHOLD = 0.80  # Threshold for high-confidence detections for small objects
+HIGH_CONFIDENCE_THRESHOLD = 0.75  # Threshold for high-confidence detections for small objects
 
 # Load graphics image once
 imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
+# Commented out noisy print statements
+# print("Warning: Could not load graphics.png, continuing without overlay")
 if imgGraphics is None:
-    print("Warning: Could not load graphics.png, continuing without overlay")
     imgGraphics = None
 
 # Initialize tracker with optimized parameters
@@ -59,8 +60,9 @@ tracker = Sort(max_age=30, min_hits=1, iou_threshold=0.45)
 
 # Load mask image as ROI filter
 mask_img = cv2.imread("laneB(1).png", cv2.IMREAD_GRAYSCALE)
+# Commented out noisy print statements
+# print("Warning: Could not load mask file ml2.png, proceeding without mask")
 if mask_img is None:
-    print("Warning: Could not load mask file ml2.png, proceeding without mask")
     mask_3ch = None
 else:
     _, mask_bin = cv2.threshold(mask_img, 128, 255, cv2.THRESH_BINARY)
@@ -80,10 +82,10 @@ limitsDown_y_min = limitsDown[1] - 57
 limitsDown_y_max = limitsDown[1] + 57
 
 # Wider boundary for bikes (they're smaller and can be missed in narrow boundaries)
-bike_limitsUp_y_min = limitsUp[1] - 70
-bike_limitsUp_y_max = limitsUp[1] + 70
-bike_limitsDown_y_min = limitsDown[1] - 70
-bike_limitsDown_y_max = limitsDown[1] + 70
+bike_limitsUp_y_min = limitsUp[1] - 50
+bike_limitsUp_y_max = limitsUp[1] + 50
+bike_limitsDown_y_min = limitsDown[1] - 50
+bike_limitsDown_y_max = limitsDown[1] + 50
 
 # Pre-calculate line coordinates for drawing
 line_coords = {
@@ -109,7 +111,7 @@ vehicle_first_types = {}
 
 # Enhanced tracking to maintain identity despite ID changes
 class EnhancedObjectTracker:
-    def __init__(self, max_history=20):
+    def __init__(self, max_history=30):
         self.tracked_objects = {}  # Dict mapping stable IDs to current tracker IDs
         self.object_history = {}   # Dict mapping stable IDs to position history
         self.next_stable_id = 1    # Stable ID counter
@@ -265,7 +267,7 @@ while True:
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
-            
+ 
             # Skip very small detections completely
             if w < MIN_DETECTION_SIZE or h < MIN_DETECTION_SIZE:
                 continue
@@ -497,6 +499,10 @@ while True:
                     segment_events.append({'Segment': segment_number, 'Vehicle_ID': stable_id, 'Type': vehicle_type, 'Direction': 'Up', 'Video_Time': round(video_time, 2)})
         
         if is_crossing_down:
+            # Debug print statements for down line counting
+            print(f"Checking DOWN: cx={cx}, cy={cy}, limits={limitsDown}, y_range=({limitsDown_y_min}, {limitsDown_y_max}), stable_id={stable_id}")
+            print(f"Already in seg_carCountDown? {stable_id in seg_carCountDown}")
+            print(f"recent_crossings_down: {recent_crossings_down[vehicle_type]}")
             # Check for spatial proximity to prevent double counting from ID changes
             is_new_crossing = True
             
