@@ -19,10 +19,10 @@ orig_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 orig_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 print(f"Default video resolution: {orig_width}x{orig_height}")
 # Compute display resolution (minus 10 pixels each)
-disp_width = max(1, orig_width - 380)
-disp_height = max(1, orig_height - 300)
+disp_width = max(1, orig_width - 280)
+disp_height = max(1, orig_height - 200)
 print(f"Display resolution set to: {disp_width}x{disp_height}")
-
+ 
 model = YOLO("yolov8n.pt")
 model.to('cpu')
 
@@ -33,7 +33,7 @@ if mask_img is None:
 # Create binary mask
 _, mask_bin = cv2.threshold(mask_img, 128, 255, cv2.THRESH_BINARY)
 
-# Complete COCO classes list
+ # Complete COCO classes list
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
               "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
               "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella",
@@ -243,8 +243,7 @@ while True:
         color = vehicle_colors.get(vehicle_type, (255, 0, 255))
         
         # Draw (lighter and faster)
-        cv2.rectangle(img, (x1, y1), (x2, y2), color, 1)  # thinner box
-        cv2.circle(img, (cx, cy), 3, color, cv2.FILLED)  # smaller circle
+        # cv2.circle(img, (cx, cy), 3, color, cv2.FILLED)  # center dot only (removed)
         
         vehicle_positions[int(id)] = (cx, cy)
         
